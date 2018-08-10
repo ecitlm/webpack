@@ -10,9 +10,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const ZipPlugin = require('zip-webpack-plugin')
 
-const env = require('../config/prod.env')
+const env = require('../config/prod_test.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
   externals: {
@@ -24,14 +23,14 @@ const webpackConfig = merge(baseWebpackConfig, {
   },
   module: {
     rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
+      sourceMap: config.build_test.productionSourceMap,
       extract: true,
       usePostCSS: true
     })
   },
-  devtool: config.build.productionSourceMap ? config.build.devtool : false,
+  devtool: config.build_test.productionSourceMap ? config.build_test.devtool : false,
   output: {
-    path: config.build.assetsRoot,
+    path: config.build_test.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
@@ -44,10 +43,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       uglifyOptions: {
         compress: {
           warnings: false,
-          drop_console: true
+          drop_console: false
         }
       },
-      sourceMap: config.build.productionSourceMap,
+      sourceMap: config.build_test.productionSourceMap,
       parallel: true
     }),
     // extract css into its own file
@@ -62,7 +61,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
-      cssProcessorOptions: config.build.productionSourceMap
+      cssProcessorOptions: config.build_test.productionSourceMap
         ? { safe: true, map: { inline: false } }
         : { safe: true }
     }),
@@ -70,7 +69,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: config.build.index,
+      filename: config.build_test.index,
       template: 'index_build.html',
       inject: false,
       minify: {
@@ -133,14 +132,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
+        to: config.build_test.assetsSubDirectory,
         ignore: ['.*']
       }
-    ]),
-    new ZipPlugin({
-      path: path.join(__dirname, '../dist'),
-      filename: 'standard.zip'
-    })
+    ])
   ]
 })
 
@@ -168,27 +163,3 @@ if (config.build.bundleAnalyzerReport) {
 }
 
 module.exports = webpackConfig
-
-Promise.resolve()
-  // 请求拦截器
-  .then(() => {
-
-  }, () => {
-
-  })
-  // ajax
-  .then(() => {
-
-  }, () => {
-
-  })
-  // 失败拦截器
-  .then(() => {
-    // 这里要不要reject
-  }, () => {
-
-  })
-  // 我们的错误回调
-  .catch(err=>{
-
-  })

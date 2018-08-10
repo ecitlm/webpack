@@ -1,15 +1,32 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import VueRouter from 'vue-router'
+import store from '@/store'
+import routes from '@/router/routes'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
-  ]
+const router = new VueRouter({
+  mode: 'hash',
+  routes
 })
+
+router.beforeEach((to, from, next) => {
+  console.log(`路由从---${from.path}到----${to.path}`)
+  if (to.meta.requireAuth) {
+    if (store.state.token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath
+        },
+        replace: true
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

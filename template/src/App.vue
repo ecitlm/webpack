@@ -1,25 +1,22 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    {{#router}}
-    <router-view/>
-    {{else}}
-    <HelloWorld/>
-    {{/router}}
+  <div id="wrapper">
+    <router-view></router-view>
+    <loading v-show="loading"></loading>
   </div>
 </template>
 
 <script>
-{{#unless router}}
-import HelloWorld from './components/HelloWorld'
-
-{{/unless}}
-export default {
-  name: 'App'{{#router}}{{else}},
-  components: {
-    HelloWorld
-  }{{/router}}
-}
+  import loading from './components/Loading.vue'
+  export default {
+    components: {
+      loading
+    },
+    computed: {
+      loading () {
+        return this.$store.state.loading
+      }
+    }
+  }
 </script>
 
 <style>
